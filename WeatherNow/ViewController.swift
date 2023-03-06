@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     
     let mainUI = MainUI()
     
@@ -18,9 +18,36 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        mainUI.searchField.delegate = self
+        
+        mainUI.searchButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
     }
     
     
+    @objc func searchButtonPressed(_ sender: UIButton) {
+        mainUI.searchField.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        mainUI.searchField.endEditing(true)
+        return true
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if textField.text != "" {
+            return true
+        }else {
+            textField.placeholder = "No results"
+            return false
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        //
+        
+        textField.text = ""
+    }
 }
+
+
 

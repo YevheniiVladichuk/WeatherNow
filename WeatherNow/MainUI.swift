@@ -49,11 +49,19 @@ class MainUI: UIView {
         searchField.textColor = .systemBackground
         searchField.font = searchField.font?.withSize(25)
         searchField.textAlignment = .right
+        
+        //indent from the edge
+        searchField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
+        searchField.rightViewMode = .always
+        
+        searchField.tintColor = .systemBackground
         searchField.placeholder = "Search"
+        searchField.backgroundColor = UIColor.systemFill
+        searchField.layer.cornerRadius = 5
         return searchField
     }()
     
-    let searcButton: UIButton = {
+    let searchButton: UIButton = {
         let searchButton = UIButton()
         searchButton.setBackgroundImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.tintColor = .systemBackground
@@ -61,11 +69,11 @@ class MainUI: UIView {
         return searchButton
     }()
     
-    let weatherImage: UIImageView = {
-        let weatherImage = UIImageView()
-        weatherImage.image = UIImage(systemName: "sun.max")
-        weatherImage.tintColor = .systemBackground
-        return weatherImage
+    let conditionImage: UIImageView = {
+        let conditionImage = UIImageView()
+        conditionImage.image = UIImage(systemName: "sun.max")
+        conditionImage.tintColor = .systemBackground
+        return conditionImage
     }()
     
     let temperatureStack: UIStackView = {
@@ -123,9 +131,9 @@ class MainUI: UIView {
         
         hStackTop.addArrangedSubview(locationButton)
         hStackTop.addArrangedSubview(searchField)
-        hStackTop.addArrangedSubview(searcButton)
+        hStackTop.addArrangedSubview(searchButton)
         
-        vStack.addArrangedSubview(weatherImage)
+        vStack.addArrangedSubview(conditionImage)
         vStack.addArrangedSubview(temperatureStack)
         
         temperatureStack.addArrangedSubview(temperatureLabel)
@@ -150,10 +158,10 @@ class MainUI: UIView {
             
             hStackTop.heightAnchor.constraint(equalToConstant: 40),
             locationButton.widthAnchor.constraint(equalToConstant: 40),
-            searcButton.widthAnchor.constraint(equalToConstant: 40),
+            searchButton.widthAnchor.constraint(equalToConstant: 40),
             
-            weatherImage.heightAnchor.constraint(equalToConstant: 120),
-            weatherImage.widthAnchor.constraint(equalToConstant: 120)
+            conditionImage.heightAnchor.constraint(equalToConstant: 120),
+            conditionImage.widthAnchor.constraint(equalToConstant: 120)
         ])
     }
 }
