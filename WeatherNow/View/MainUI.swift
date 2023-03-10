@@ -71,6 +71,7 @@ class MainUI: UIView {
     
     let conditionImage: UIImageView = {
         let conditionImage = UIImageView()
+        conditionImage.contentMode = .scaleAspectFit
         conditionImage.image = UIImage(systemName: "sun.max")
         conditionImage.tintColor = .systemBackground
         return conditionImage

@@ -7,9 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController {
     
+   
     let mainUI = MainUI()
+    var weatherManager = WeatherManager()
     
     override func loadView() {
         super.loadView()
@@ -18,11 +20,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        weatherManager.delegate = self
         mainUI.searchField.delegate = self
         
         mainUI.searchButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
     }
-    
+
+}
+
+// MARK: - UITextFieldDelegate
+
+extension ViewController: UITextFieldDelegate {
     
     @objc func searchButtonPressed(_ sender: UIButton) {
         mainUI.searchField.endEditing(true)
@@ -43,11 +51,27 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        //
-        
+        if let city = textField.text {
+            weatherManager.fetchWeather(cityName: city)
+        }
         textField.text = ""
     }
 }
 
+// MARK: - WeatherManagerDelegate
 
+extension ViewController: WeatherManagerDelegate {
+    
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
+        DispatchQueue.main.async {
+            self.mainUI.temperatureLabel.text = weather.tempString
+            self.mainUI.conditionImage.image = UIImage(systemName: weather.weatherCondition)
+            self.mainUI.cityLabel.text = weather.cityName
+        }
+    }
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
+}
 
