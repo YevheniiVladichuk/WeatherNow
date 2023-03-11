@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     let mainUI = MainUI()
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
+    
+    
     let spiner = UIActivityIndicatorView()
     
     override func loadView() {
@@ -23,6 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        weatherManager.delegateSpinner = self
         weatherManager.delegate = self
         mainUI.searchField.delegate = self
         
@@ -75,24 +78,6 @@ extension ViewController: UITextFieldDelegate {
 
 extension ViewController: WeatherManagerDelegate {
     
-    
-    func stopActivityIndicator() {
-        DispatchQueue.main.async {
-            self.spiner.stopAnimating()
-            self.spiner.hidesWhenStopped = true
-        }
-    }
-    
-    func showActivityIndicator() {
-        DispatchQueue.main.async {
-            self.spiner.style = .large
-            self.spiner.color = UIColor(named: "MyWeatherColor")
-            self.view.addSubview(self.spiner)
-            self.spiner.center = self.view.center
-            self.spiner.startAnimating()
-        }
-    }
-    
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
             self.mainUI.temperatureLabel.text = weather.tempString
@@ -127,5 +112,27 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+}
+
+// MARK: - SpinnerManagerDelegate
+
+extension ViewController: SpinnerManagerDelegate {
+    
+    func stopActivityIndicator() {
+        DispatchQueue.main.async {
+            self.spiner.stopAnimating()
+            self.spiner.hidesWhenStopped = true
+        }
+    }
+    
+    func showActivityIndicator() {
+        DispatchQueue.main.async {
+            self.spiner.style = .large
+            self.spiner.color = UIColor(named: "MyWeatherColor")
+            self.view.addSubview(self.spiner)
+            self.spiner.center = self.view.center
+            self.spiner.startAnimating()
+        }
     }
 }

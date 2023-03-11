@@ -10,15 +10,18 @@ import CoreLocation
 
 protocol WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
+    func didFailWithError(error: Error)
+}
+
+protocol SpinnerManagerDelegate {
     func showActivityIndicator()
     func stopActivityIndicator()
-    func didFailWithError(error: Error)
 }
 
 struct WeatherManager {
     
     var delegate: WeatherManagerDelegate?
-    
+    var delegateSpinner: SpinnerManagerDelegate?
     
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=1aa1e08139c8e72a479ee95dee05daf6&units=metric"
     
@@ -48,7 +51,7 @@ struct WeatherManager {
                 if let safeData = data {
                     if let weather = self.parseJSON(safeData) {
                         self.delegate?.didUpdateWeather(self, weather: weather)
-                        self.delegate?.stopActivityIndicator()
+                        self.delegateSpinner?.stopActivityIndicator()
                     }
                 }
             }
