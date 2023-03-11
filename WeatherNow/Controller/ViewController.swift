@@ -30,9 +30,7 @@ class ViewController: UIViewController {
         mainUI.searchField.delegate = self
         
         locationManager.delegate = self
-        showActivityIndicator()
         locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
         
         mainUI.searchButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
         mainUI.locationButton.addTarget(self, action: #selector(locationButtonPressed), for: .touchUpInside)
@@ -57,14 +55,14 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
     
-        func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-            if textField.text != "" {
-                return true
-            }else {
-                textField.placeholder = "No results"
-                return false
-            }
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if textField.text != "" {
+            return true
+        }else {
+            textField.placeholder = "No results"
+            return false
         }
+    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let city = textField.text {
@@ -107,6 +105,13 @@ extension ViewController: CLLocationManagerDelegate {
             let lon = location.coordinate.longitude
             
             weatherManager.fetchWeather(lat: lat, lon: lon)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            showActivityIndicator()
+            locationManager.requestLocation()
         }
     }
     
