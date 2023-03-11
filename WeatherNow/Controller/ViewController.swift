@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 class ViewController: UIViewController {
     
-   
     let mainUI = MainUI()
     var weatherManager = WeatherManager()
+    let locationManager = CLLocationManager()
+    let spiner = UIActivityIndicatorView()
     
     override func loadView() {
         super.loadView()
@@ -20,12 +22,23 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         weatherManager.delegate = self
         mainUI.searchField.delegate = self
         
+        locationManager.delegate = self
+        showActivityIndicator()
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+        
         mainUI.searchButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
+        mainUI.locationButton.addTarget(self, action: #selector(locationButtonPressed), for: .touchUpInside)
     }
-
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -41,14 +54,14 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
     
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textField.text != "" {
-            return true
-        }else {
-            textField.placeholder = "No results"
-            return false
+        func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+            if textField.text != "" {
+                return true
+            }else {
+                textField.placeholder = "No results"
+                return false
+            }
         }
-    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let city = textField.text {
@@ -62,6 +75,24 @@ extension ViewController: UITextFieldDelegate {
 
 extension ViewController: WeatherManagerDelegate {
     
+    
+    func stopActivityIndicator() {
+        DispatchQueue.main.async {
+            self.spiner.stopAnimating()
+            self.spiner.hidesWhenStopped = true
+        }
+    }
+    
+    func showActivityIndicator() {
+        DispatchQueue.main.async {
+            self.spiner.style = .large
+            self.spiner.color = UIColor(named: "MyWeatherColor")
+            self.view.addSubview(self.spiner)
+            self.spiner.center = self.view.center
+            self.spiner.startAnimating()
+        }
+    }
+    
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
             self.mainUI.temperatureLabel.text = weather.tempString
@@ -71,7 +102,30 @@ extension ViewController: WeatherManagerDelegate {
     }
     
     func didFailWithError(error: Error) {
-        print(error)
+        print("The user did not enter a city name.")
     }
 }
 
+// MARK: - CLLocationManagerDelegate
+
+extension ViewController: CLLocationManagerDelegate {
+    
+    @objc func locationButtonPressed(_ sender: UIButton) {
+        showActivityIndicator()
+        mainUI.searchField.endEditing(true)
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            
+            weatherManager.fetchWeather(lat: lat, lon: lon)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+}

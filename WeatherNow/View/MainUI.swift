@@ -39,7 +39,7 @@ class MainUI: UIView {
     let locationButton: UIButton = {
         let locationButton = UIButton()
         locationButton.setBackgroundImage(UIImage(systemName: "location.circle.fill"), for: .normal)
-        locationButton.tintColor = .systemBackground
+        locationButton.tintColor = UIColor(named: "MyWeatherColor")
         locationButton.translatesAutoresizingMaskIntoConstraints = false
         return locationButton
     }()
@@ -54,17 +54,18 @@ class MainUI: UIView {
         searchField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 0))
         searchField.rightViewMode = .always
         
-        searchField.tintColor = .systemBackground
+        searchField.tintColor = UIColor(named: "MyWeatherColor")
         searchField.placeholder = "Search"
         searchField.backgroundColor = UIColor.systemFill
         searchField.layer.cornerRadius = 5
+        
         return searchField
     }()
     
     let searchButton: UIButton = {
         let searchButton = UIButton()
         searchButton.setBackgroundImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        searchButton.tintColor = .systemBackground
+        searchButton.tintColor = UIColor(named: "MyWeatherColor")
         searchButton.translatesAutoresizingMaskIntoConstraints = false
         return searchButton
     }()
@@ -72,8 +73,7 @@ class MainUI: UIView {
     let conditionImage: UIImageView = {
         let conditionImage = UIImageView()
         conditionImage.contentMode = .scaleAspectFit
-        conditionImage.image = UIImage(systemName: "sun.max")
-        conditionImage.tintColor = .systemBackground
+        conditionImage.tintColor = UIColor(named: "MyWeatherColor")
         return conditionImage
     }()
     
@@ -85,8 +85,7 @@ class MainUI: UIView {
     
     let temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
-        temperatureLabel.text = "21"
-        temperatureLabel.textColor = .systemBackground
+        temperatureLabel.textColor = UIColor(named: "MyWeatherColor")
         temperatureLabel.font = .systemFont(ofSize: 80)
         temperatureLabel.textAlignment = .right
         return temperatureLabel
@@ -95,7 +94,7 @@ class MainUI: UIView {
     let celsiusLabel: UILabel = {
         let celsiusLabel = UILabel()
         celsiusLabel.text = "°C"
-        celsiusLabel.textColor = .systemBackground
+        celsiusLabel.textColor = UIColor(named: "MyWeatherColor")
         celsiusLabel.font = .systemFont(ofSize: 100, weight: .light)
         celsiusLabel.textAlignment = .left
         return celsiusLabel
@@ -103,8 +102,7 @@ class MainUI: UIView {
     
     let cityLabel: UILabel = {
         let cityLabel = UILabel()
-        cityLabel.text = "Kyiv"
-        cityLabel.textColor = .systemBackground
+        cityLabel.textColor = UIColor(named: "MyWeatherColor")
         cityLabel.font = .systemFont(ofSize: 35)
         return cityLabel
     }()
